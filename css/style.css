@@ -278,3 +278,82 @@ button:active {
     margin-bottom: 15px;
   }
 }
+#massas {
+  max-width: 900px;
+  margin: 0 auto 20px auto;
+  padding: 10px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(216, 67, 21, 0.3);
+}
+
+#massas h2 {
+  font-size: 2rem;
+  color: #d84315;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+#massas h3 {
+  font-size: 1.5rem;
+  color: #d84315;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+#massas .option-card {
+  background: #fff3e0;
+  border: 1px solid #d84315;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 5px;
+}
+
+#massas .option-card:hover,
+#massas .option-card input:checked + span {
+  box-shadow: 0 0 10px #d84315;
+  background: #ffe0b2;
+}
+
+#massas .option-card input[type="radio"],
+#massas .option-card input[type="checkbox"] {
+  display: none;
+}
+
+#massas .option-card span {
+  font-weight: bold;
+  color: #d84315;
+}
+
+#massas button {
+  background-color: #d84315;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(216, 67, 21, 0.4);
+  margin-top: 20px;
+  display: block;
+  width: 100%;
+}
+
+#massas button:hover,
+#massas button:focus {
+  background-color: #bf360c;
+  outline: none;
+  transform: scale(1.05);
+}
+
+#massas button:active {
+  transform: scale(0.95);
+}
