@@ -20,7 +20,7 @@ header {
 
 header h1 {
   margin-bottom: 10px;
-  color: #d84315;
+  color: #B8341B;
 }
 
 /* Responsive header for menu sections */
@@ -48,7 +48,7 @@ nav ul {
 }
 
 nav button {
-  background: #d84315;
+  background: #ECA555;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -89,7 +89,7 @@ nav button:focus {
 /* Option card */
 .option-card {
   background: #fff3e0;
-  border: 1px solid #d84315;
+  border: 1px solid #ECA555;
   border-radius: 8px;
   padding: 10px;
   text-align: center;
@@ -102,7 +102,7 @@ nav button:focus {
 
 .option-card:hover,
 .option-card.selected {
-  box-shadow: 0 0 10px #d84315;
+  box-shadow: 0 0 10px #ECA555;
   background: #ffe0b2;
 }
 
@@ -122,12 +122,12 @@ nav button:focus {
 /* Label text */
 .option-label {
   font-weight: bold;
-  color: #d84315;
+  color: #B8341B;
 }
 
 /* Buttons */
 button {
-  background-color: #d84315;
+  background-color: #ECA555;
   color: white;
   border: none;
   padding: 12px 20px;
@@ -172,7 +172,7 @@ button:active {
 
 #cart li button {
   margin-left: auto;
-  background: #d84315;
+  background: #ECA555;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -215,7 +215,7 @@ button:active {
 }
 
 #checkout button {
-  background: #d84315;
+  background: #ECA555;
   color: white;
   border: none;
   padding: 12px;
@@ -244,7 +244,7 @@ button:active {
   flex: 1 1 45%;
   max-width: 45%;
   background: #fff3e0;
-  border: 1px solid #d84315;
+  border: 1px solid #ECA555;
   border-radius: 8px;
   padding: 20px;
   text-align: center;
@@ -257,7 +257,7 @@ button:active {
 
 .large-option-card:hover,
 .large-option-card.selected {
-  box-shadow: 0 0 15px #d84315;
+  box-shadow: 0 0 15px #ECA555;
   background: #ffe0b2;
 }
 
@@ -289,21 +289,21 @@ button:active {
 
 #massas h2 {
   font-size: 2rem;
-  color: #d84315;
+  color: #B8341B;
   margin-bottom: 15px;
   text-align: center;
 }
 
 #massas h3 {
   font-size: 1.5rem;
-  color: #d84315;
+  color: #B8341B;
   margin-top: 20px;
   margin-bottom: 10px;
 }
 
 #massas .option-card {
   background: #fff3e0;
-  border: 1px solid #d84315;
+  border: 1px solid #B8341B;
   border-radius: 8px;
   padding: 10px;
   text-align: center;
@@ -317,7 +317,7 @@ button:active {
 
 #massas .option-card:hover,
 #massas .option-card input:checked + span {
-  box-shadow: 0 0 10px #d84315;
+  box-shadow: 0 0 10px #ECA555;
   background: #ffe0b2;
 }
 
@@ -328,11 +328,11 @@ button:active {
 
 #massas .option-card span {
   font-weight: bold;
-  color: #d84315;
+  color: #B8341B;
 }
 
 #massas button {
-  background-color: #d84315;
+  background-color: #ECA555;
   color: white;
   border: none;
   padding: 12px 20px;
@@ -351,7 +351,7 @@ button:active {
 #massas button:focus {
   background-color: #bf360c;
   outline: none;
-  transform: scale(1.05);
+  transform: scale(1.0);
 }
 
 #massas button:active {

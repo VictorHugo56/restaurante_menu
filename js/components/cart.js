@@ -4,7 +4,6 @@ const cartContainerId = 'cart';
 
 function getItemImageSrc(item) {
   if (item.category === 'Pizza') {
-    // Use first sabor image or a generic pizza image
     if (item.sabores && item.sabores.length > 0 && item.sabores[0].img) {
       return item.sabores[0].img;
     }
@@ -29,8 +28,21 @@ function formatItemText(item) {
     const optionLabel = item.option === '1sabor' ? '1 Sabor' : '2 Sabores';
     return `Pizza ${sizeLabel} (${optionLabel}): ${sabores} - R$ ${item.price.toFixed(2)}`;
   } else if (item.category === 'Esfiha') {
-    const complemento = item.complemento ? ` + ${item.complemento.label}` : '';
-    return `Esfiha ${item.sabor.label}${complemento} - R$ ${item.price.toFixed(2)}`;
+    const adicionaisText = item.adicionais && item.adicionais.length > 0
+      ? ' + ' + item.adicionais.map(a => a.label).join(', ')
+      : '';
+    return `Esfiha ${item.sabor.label}${adicionaisText} - R$ ${item.price.toFixed(2)}`;
+  } else if (item.category === 'Macarrão') {
+    const acompanhamentosText = item.acompanhamentos && item.acompanhamentos.length > 0
+      ? `Acompanhamentos: ${item.acompanhamentos.join(', ')}`
+      : '';
+    const molhosText = item.molhos && item.molhos.length > 0
+      ? `Molhos: ${item.molhos.join(', ')}`
+      : '';
+    const adicionaisText = item.adicionais && item.adicionais.length > 0
+      ? `Adicionais: ${item.adicionais.map(a => a.label).join(', ')}`
+      : '';
+    return `Macarrão ${item.tipo.label} ${item.tamanho.label} - R$ ${item.price.toFixed(2)}\n${acompanhamentosText}\n${molhosText}\n${adicionaisText}`;
   } else if (item.category === 'Sobremesa') {
     return `${item.name} - R$ ${item.price.toFixed(2)}`;
   } else if (item.category === 'Bebida') {
@@ -49,15 +61,6 @@ function renderCart() {
   const ul = document.createElement('ul');
   cart.forEach((item, index) => {
     const li = document.createElement('li');
-
-    // Removed image element for cart items
-    // const imgSrc = getItemImageSrc(item);
-    // if (imgSrc) {
-    //   const img = document.createElement('img');
-    //   img.src = imgSrc;
-    //   img.alt = item.name || item.sabor?.label || 'Item';
-    //   li.appendChild(img);
-    // }
 
     const textSpan = document.createElement('span');
     textSpan.textContent = formatItemText(item);

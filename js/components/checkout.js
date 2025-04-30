@@ -47,9 +47,9 @@ function render(container) {
   form.appendChild(createInput('Rua:', 'rua'));
   form.appendChild(createInput('Número:', 'numero', 'text'));
   form.appendChild(createInput('Complemento (opcional):', 'complemento', 'text', false));
-  // Remove the text input for Bairro and replace with select dropdown with delivery fees
+  // Neighborhood options with labels and fees
   const neighborhoodOptions = [
-    { value: '', label: 'Selecione o Bairro' },
+    { value: '', label: 'Selecione o Bairro', fee: 0 },
     { value: 'vila_ema', label: 'Vila Ema - R$3', fee: 3 },
     { value: 'vila_yolanda', label: 'Vila Yolanda - R$3', fee: 3 },
     { value: 'fazendinha', label: 'Fazendinha - R$3', fee: 3 },
@@ -168,22 +168,25 @@ function render(container) {
     const numero = formData.get('numero');
     const complemento = formData.get('complemento') || 'Sem complemento';
     const bairro = formData.get('bairro');
-    // Map neighborhood value to delivery fee
-    const deliveryFees = {
-      vila_ema: 3,
-      vila_yolanda: 3,
-      fazendinha: 3,
-      vila_matias: 3,
-      portelinha: 3,
-      vila_nova_sao_vicente: 3,
-      parque_das_bandeiras: 3,
-      gleba: 3,
-      rio_branco: 5,
-      rio_negro: 6,
-      quarentenario: 6,
-      humaita: 8,
+    // Map neighborhood value to delivery fee and label
+    const neighborhoodMap = {
+      vila_ema: { label: 'Vila Ema', fee: 3 },
+      vila_yolanda: { label: 'Vila Yolanda', fee: 3 },
+      fazendinha: { label: 'Fazendinha', fee: 3 },
+      vila_matias: { label: 'Vila Matias', fee: 3 },
+      portelinha: { label: 'Portelinha', fee: 3 },
+      vila_nova_sao_vicente: { label: 'Vila Nova São Vicente', fee: 3 },
+      parque_das_bandeiras: { label: 'Parque das Bandeiras', fee: 3 },
+      gleba: { label: 'Gleba e Samaritá', fee: 3 },
+      rio_branco: { label: 'Rio Branco', fee: 5 },
+      rio_negro: { label: 'Rio Negro', fee: 6 },
+      quarentenario: { label: 'Quarentenário', fee: 6 },
+      humaita: { label: 'Humaitá', fee: 8 },
     };
-    const deliveryFee = deliveryFees[bairro] || 0;
+    const neighborhoodInfo = neighborhoodMap[bairro] || { label: bairro, fee: 0 };
+    const deliveryFee = neighborhoodInfo.fee;
+    const bairroLabel = neighborhoodInfo.label;
+
     const pagamento = formData.get('pagamento');
     const trocoNecessario = formData.get('trocoNecessario') || 'nao';
     const trocoValor = formData.get('trocoValor') || '';
@@ -202,7 +205,7 @@ function render(container) {
     // Format order message
     let message = `Pedido da Pizzaria:%0A`;
     message += `Nome: ${nome}%0A`;
-    message += `Endereço: ${rua}, Nº ${numero}, ${complemento}, Bairro: ${bairro}%0A`;
+    message += `Endereço: ${rua}, Nº ${numero}, ${complemento}, Bairro: ${bairroLabel}%0A`;
     message += `Taxa de entrega: R$ ${deliveryFee.toFixed(2)}%0A`;
     const itemsTotal = cartItems.reduce((sum, item) => sum + item.price, 0);
     const totalWithDelivery = itemsTotal + deliveryFee;
@@ -212,17 +215,30 @@ function render(container) {
       message += `Necessita troco para: R$ ${trocoValor}%0A`;
     }
     message += `%0AItens:%0A`;
-    cartItems.forEach((item, index) => {
+    cartItems.forEach(item => {
       if (item.category === 'Pizza') {
         const sizeLabel = item.size === 'grande' ? 'Grande' : 'Broto';
         const optionLabel = item.option === '1sabor' ? '1 Sabor' : '2 Sabores';
         const sabores = item.sabores.map(s => s.label).join(', ');
-        message += `${index + 1}. Pizza ${sizeLabel} (${optionLabel}): ${sabores} - R$ ${item.price.toFixed(2)}%0A`;
+        message += `Pizza ${sizeLabel} (${optionLabel}): ${sabores} - R$ ${item.price.toFixed(2)}%0A`;
       } else if (item.category === 'Esfiha') {
-        const complementoText = item.complemento ? ` + ${item.complemento.label}` : '';
-        message += `${index + 1}. Esfiha ${item.sabor.label}${complementoText} - R$ ${item.price.toFixed(2)}%0A`;
+        const adicionaisText = item.adicionais && item.adicionais.length > 0
+          ? `\n - Adicionais: ${item.adicionais.map(a => a.label).join(', ')}`
+          : '';
+        message += `Esfiha ${item.sabor.label}${adicionaisText} - R$ ${item.price.toFixed(2)}%0A`;
+      } else if (item.category === 'Macarrão') {
+        const acompanhamentosText = item.acompanhamentos && item.acompanhamentos.length > 0
+          ? `Acompanhamentos: ${item.acompanhamentos.join(', ')}`
+          : '';
+        const molhosText = item.molhos && item.molhos.length > 0
+          ? `Molhos: ${item.molhos.join(', ')}`
+          : '';
+        const adicionaisText = item.adicionais && item.adicionais.length > 0
+          ? `Adicionais: ${item.adicionais.map(a => a.label).join(', ')}`
+          : '';
+        message += `Macarrão ${item.tipo.label} ${item.tamanho.label} - R$ ${item.price.toFixed(2)}%0A${acompanhamentosText}%0A${molhosText}%0A${adicionaisText}%0A`;
       } else if (item.category === 'Sobremesa' || item.category === 'Bebida') {
-        message += `${index + 1}. ${item.name} - R$ ${item.price.toFixed(2)}%0A`;
+        message += `${item.name} - R$ ${item.price.toFixed(2)}%0A`;
       }
     });
 
