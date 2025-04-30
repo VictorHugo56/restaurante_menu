@@ -268,16 +268,6 @@ button:active {
   border-radius: 6px;
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  #pizzaOptions {
-    flex-direction: column;
-  }
-  .large-option-card {
-    max-width: 100%;
-    margin-bottom: 15px;
-  }
-}
 #massas {
   max-width: 900px;
   margin: 0 auto 20px auto;
@@ -356,4 +346,41 @@ button:active {
 
 #massas button:active {
   transform: scale(0.95);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  #pizzaOptions {
+    flex-direction: column;
+  }
+  .large-option-card {
+    max-width: 100%;
+    margin-bottom: 15px;
+  }
+  nav ul {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  nav button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+
+  /* Show 2 items per row in options grid with smaller size */
+  .options-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  /* Option card smaller size */
+  .option-card {
+    padding: 8px;
+  }
+  .option-card img {
+    max-width: 80px;
+    margin-bottom: 8px;
+  }
+  .option-label {
+    font-size: 0.9rem;
+  }
 }
