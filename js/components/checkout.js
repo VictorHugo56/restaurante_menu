@@ -1,6 +1,6 @@
 import { getCartItems } from './cart.js';
 
-const whatsappNumber = '5513981343707'; // Brazil country code + number without spaces or symbols
+const whatsappNumber = '5513981292081'; // Brazil country code + number without spaces or symbols
 
 function createInput(labelText, id, type = 'text', required = true) {
   const label = document.createElement('label');
