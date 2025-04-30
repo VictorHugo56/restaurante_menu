@@ -42,14 +42,28 @@ const esfihasData = {
   ],
 };
 
-function createOptionCard(item, onClick, isSelected = false, isCheckbox = false) {
+function createOptionCheckbox(item, onChange, isChecked = false) {
   const label = document.createElement('label');
   label.className = 'option-card';
-  if (isSelected) {
-    label.classList.add('selected');
-  }
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = isChecked;
+  checkbox.addEventListener('change', () => {
+    onChange(item, checkbox.checked);
+  });
+  label.appendChild(checkbox);
 
-  // Create image element
+  const span = document.createElement('span');
+  span.textContent = item.label + (item.price ? ` - R$ ${item.price.toFixed(2)}` : '');
+  label.appendChild(span);
+
+  return label;
+}
+
+function createOptionCard(item, onClick) {
+  const label = document.createElement('label');
+  label.className = 'option-card';
+
   if (item.img) {
     const img = document.createElement('img');
     img.src = item.img;
@@ -63,23 +77,12 @@ function createOptionCard(item, onClick, isSelected = false, isCheckbox = false)
   span.textContent = `${item.label} - R$ ${item.price.toFixed(2)}`;
   label.appendChild(span);
 
-  if (isCheckbox) {
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = isSelected;
-    checkbox.addEventListener('change', () => {
-      onClick(item, checkbox.checked);
-      label.classList.toggle('selected', checkbox.checked);
-    });
-    label.insertBefore(checkbox, span);
-  } else {
-    const button = document.createElement('button');
-    button.textContent = 'Selecionar';
-    button.addEventListener('click', () => {
-      onClick(item);
-    });
-    label.appendChild(button);
-  }
+  const button = document.createElement('button');
+  button.textContent = 'Selecionar';
+  button.addEventListener('click', () => {
+    onClick(item);
+  });
+  label.appendChild(button);
 
   return label;
 }
@@ -90,65 +93,63 @@ function render(container) {
   title.textContent = 'Esfihas';
   container.appendChild(title);
 
-  // State to track selected esfiha and adicionais
   let selectedEsfiha = null;
   const selectedAdicionais = new Set();
 
-  // Function to render adicionais section
-  function renderAdicionais() {
-    // Remove existing adicionais section if any
-    const existingAdicionalSection = container.querySelector('#adicional-section');
-    if (existingAdicionalSection) {
-      container.removeChild(existingAdicionalSection);
-    }
-    if (!selectedEsfiha) return;
+  // Modal container
+  const modal = document.createElement('div');
+  modal.id = 'esfiha-modal';
+  modal.style.display = 'none';
+  modal.style.position = 'fixed';
+  modal.style.top = '0';
+  modal.style.left = '0';
+  modal.style.width = '100%';
+  modal.style.height = '100%';
+  modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+  modal.style.justifyContent = 'center';
+  modal.style.alignItems = 'center';
+  modal.style.zIndex = '1000';
 
-    const adicionalSection = document.createElement('div');
-    adicionalSection.id = 'adicional-section';
+  const modalContent = document.createElement('div');
+  modalContent.style.backgroundColor = '#fff';
+  modalContent.style.padding = '20px';
+  modalContent.style.borderRadius = '8px';
+  modalContent.style.maxWidth = '400px';
+  modalContent.style.width = '90%';
+  modalContent.style.maxHeight = '80%';
+  modalContent.style.overflowY = 'auto';
+  modal.appendChild(modalContent);
 
-    const adicionalTitle = document.createElement('h3');
-    adicionalTitle.textContent = 'Adicional';
-    adicionalSection.appendChild(adicionalTitle);
+  container.appendChild(modal);
 
-    const adicionalGrid = document.createElement('div');
-    adicionalGrid.className = 'options-grid';
+  function openModal(item) {
+    selectedEsfiha = item;
+    selectedAdicionais.clear();
+    modalContent.innerHTML = '';
 
-    esfihasData.adicional.forEach(item => {
-      const isSelected = selectedAdicionais.has(item.id);
-      const card = createOptionCard(
-        item,
-        (item, checked) => {
-          if (checked) {
-            selectedAdicionais.add(item.id);
-          } else {
-            selectedAdicionais.delete(item.id);
-          }
-          updateTotalPrice();
-        },
-        isSelected,
-        true
-      );
-      adicionalGrid.appendChild(card);
+    const header = document.createElement('h3');
+    header.textContent = `Personalize sua Esfiha: ${item.label}`;
+    modalContent.appendChild(header);
+
+    const adicionaisTitle = document.createElement('h4');
+    adicionaisTitle.textContent = 'Adicionais';
+    modalContent.appendChild(adicionaisTitle);
+
+    esfihasData.adicional.forEach(adicional => {
+      const checkbox = createOptionCheckbox(adicional, (adicional, checked) => {
+        if (checked) {
+          selectedAdicionais.add(adicional);
+        } else {
+          selectedAdicionais.delete(adicional);
+        }
+      });
+      modalContent.appendChild(checkbox);
     });
 
-    adicionalSection.appendChild(adicionalGrid);
-
-    // Total price display
-    const totalPriceDisplay = document.createElement('p');
-    totalPriceDisplay.id = 'total-price';
-    adicionalSection.appendChild(totalPriceDisplay);
-
-    // Add to cart button
-    const addToCartButton = document.createElement('button');
-    addToCartButton.textContent = 'Adicionar ao Carrinho';
-    addToCartButton.addEventListener('click', () => {
-      if (!selectedEsfiha) {
-        alert('Por favor, selecione uma esfiha.');
-        return;
-      }
-      const adicionaisArray = Array.from(selectedAdicionais).map(id =>
-        esfihasData.adicional.find(item => item.id === id)
-      );
+    const addButton = document.createElement('button');
+    addButton.textContent = 'Adicionar ao Carrinho';
+    addButton.addEventListener('click', () => {
+      const adicionaisArray = Array.from(selectedAdicionais);
       const totalPrice = selectedEsfiha.price + adicionaisArray.reduce((sum, item) => sum + item.price, 0);
       addItemToCart({
         category: 'Esfiha',
@@ -158,24 +159,23 @@ function render(container) {
         price: totalPrice,
       });
       alert('Esfiha com adicionais adicionada ao carrinho!');
-      // Reset selections
-      selectedEsfiha = null;
-      selectedAdicionais.clear();
-      render(container);
+      closeModal();
     });
-    adicionalSection.appendChild(addToCartButton);
+    modalContent.appendChild(addButton);
 
-    container.appendChild(adicionalSection);
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'Cancelar';
+    closeButton.style.marginLeft = '10px';
+    closeButton.addEventListener('click', closeModal);
+    modalContent.appendChild(closeButton);
 
-    function updateTotalPrice() {
-      const adicionaisArray = Array.from(selectedAdicionais).map(id =>
-        esfihasData.adicional.find(item => item.id === id)
-      );
-      const totalPrice = selectedEsfiha.price + adicionaisArray.reduce((sum, item) => sum + item.price, 0);
-      totalPriceDisplay.textContent = `Preço total: R$ ${totalPrice.toFixed(2)}`;
-    }
+    modal.style.display = 'flex';
+  }
 
-    updateTotalPrice();
+  function closeModal() {
+    modal.style.display = 'none';
+    selectedEsfiha = null;
+    selectedAdicionais.clear();
   }
 
   // Render salgados and doces as selectable options
@@ -186,16 +186,7 @@ function render(container) {
   const salgadosGrid = document.createElement('div');
   salgadosGrid.className = 'options-grid';
   esfihasData.salgados.forEach(item => {
-    const card = createOptionCard(item, (item) => {
-      selectedEsfiha = item;
-      selectedAdicionais.clear();
-      renderAdicionais();
-      // Highlight selected esfiha
-      Array.from(salgadosGrid.children).forEach(child => child.classList.remove('selected'));
-      card.classList.add('selected');
-      // Also clear selection in doces
-      Array.from(docesGrid.children).forEach(child => child.classList.remove('selected'));
-    });
+    const card = createOptionCard(item, openModal);
     salgadosGrid.appendChild(card);
   });
   container.appendChild(salgadosGrid);
@@ -207,16 +198,7 @@ function render(container) {
   const docesGrid = document.createElement('div');
   docesGrid.className = 'options-grid';
   esfihasData.doces.forEach(item => {
-    const card = createOptionCard(item, (item) => {
-      selectedEsfiha = item;
-      selectedAdicionais.clear();
-      renderAdicionais();
-      // Highlight selected doce
-      Array.from(docesGrid.children).forEach(child => child.classList.remove('selected'));
-      card.classList.add('selected');
-      // Also clear selection in salgados
-      Array.from(salgadosGrid.children).forEach(child => child.classList.remove('selected'));
-    });
+    const card = createOptionCard(item, openModal);
     docesGrid.appendChild(card);
   });
   container.appendChild(docesGrid);

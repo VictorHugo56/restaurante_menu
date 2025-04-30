@@ -13,12 +13,9 @@ const bebidasData = [
   { id: 'natural_goiaba', label: 'Suco natural de Goiaba', price: 5.0, img: 'images/bebidas/natural_goiaba.jpg' },
 ];
 
-function createOptionCard(item, onClick, isSelected = false) {
+function createOptionCard(item) {
   const label = document.createElement('label');
   label.className = 'option-card';
-  if (isSelected) {
-    label.classList.add('selected');
-  }
 
   if (item.img) {
     const img = document.createElement('img');
@@ -36,7 +33,14 @@ function createOptionCard(item, onClick, isSelected = false) {
   const button = document.createElement('button');
   button.textContent = 'Selecionar';
   button.addEventListener('click', () => {
-    onClick(item);
+    addItemToCart({
+      category: 'Bebida',
+      id: item.id,
+      name: item.label,
+      price: item.price,
+      img: item.img,
+    });
+    alert('Bebida adicionada ao carrinho!');
   });
   label.appendChild(button);
 
@@ -49,42 +53,15 @@ function render(container) {
   title.textContent = 'Bebidas';
   container.appendChild(title);
 
-  let selectedBebida = null;
-
   const grid = document.createElement('div');
   grid.className = 'options-grid';
 
   bebidasData.forEach(item => {
-    const card = createOptionCard(item, (item) => {
-      selectedBebida = item;
-      // Highlight selected bebida
-      Array.from(grid.children).forEach(child => child.classList.remove('selected'));
-      card.classList.add('selected');
-    });
+    const card = createOptionCard(item);
     grid.appendChild(card);
   });
 
   container.appendChild(grid);
-
-  const addToCartButton = document.createElement('button');
-  addToCartButton.textContent = 'Adicionar ao Carrinho';
-  addToCartButton.addEventListener('click', () => {
-    if (!selectedBebida) {
-      alert('Por favor, selecione uma bebida.');
-      return;
-    }
-    addItemToCart({
-      category: 'Bebida',
-      id: selectedBebida.id,
-      name: selectedBebida.label,
-      price: selectedBebida.price,
-      img: selectedBebida.img,
-    });
-    alert('Bebida adicionada ao carrinho!');
-    selectedBebida = null;
-    render(container);
-  });
-  container.appendChild(addToCartButton);
 }
 
 export function initBebidas() {

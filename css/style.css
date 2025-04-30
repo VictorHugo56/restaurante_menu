@@ -119,6 +119,16 @@ nav button:focus {
   display: none;
 }
 
+.option-card input[type="checkbox"]:checked + span {
+  background-color: #ffe0b2;
+  border: 2px solid #ECA555;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-weight: bold;
+  color: #B8341B;
+  display: inline-block;
+}
+
 /* Label text */
 .option-label {
   font-weight: bold;
@@ -383,4 +393,35 @@ button:active {
   .option-label {
     font-size: 0.9rem;
   }
+}
+
+/* Footer styling */
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #a5834c;
+  color: #6b4c3b;
+  font-size: 0.9rem;
+  margin-top: 40px;
+  box-shadow: inset 0 1px 0 rgba(160, 149, 125, 0.74);
+}
+
+footer a {
+  color: #6b4c3b;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+footer a:hover,
+footer a:focus {
+  color: #b88a5a;
+  outline: none;
+}
+
+/* Social links in footer */
+footer p a {
+  margin: 0 10px;
+  font-size: 1.5rem;
+  vertical-align: middle;
 }
