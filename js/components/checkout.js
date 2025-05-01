@@ -63,6 +63,13 @@ function render(container) {
     { value: 'rio_negro', label: 'Rio Negro - R$6', fee: 6 },
     { value: 'quarentenario', label: 'Quarentenário - R$6', fee: 6 },
     { value: 'humaita', label: 'Humaitá - R$8', fee: 8 },
+    { value: 'parque_sao_vicente', label: 'Parque São Vicente - R$10', fee: 10 },
+    { value: 'catiapoa', label: 'Catiapoã - R$10', fee: 10 },
+    { value: 'jockey', label: 'Jockey - R$10', fee: 10 },
+    { value: 'vila_margarida', label: 'Vila Margarida - R$10', fee: 10 },
+    { value: 'sambaiatuba', label: 'Sambaiatuba - R$10', fee: 10 },
+    { value: 'centro', label: 'Centro - R$10', fee: 10 },
+    { value: 'praia_grande', label: 'Praia Grande(Especificar bairro no whats) - R$10', fee: 10 },
   ];
   form.appendChild(createSelect('Bairro:', 'bairro', neighborhoodOptions));
 
@@ -184,6 +191,13 @@ function render(container) {
       rio_negro: { label: 'Rio Negro', fee: 6 },
       quarentenario: { label: 'Quarentenário', fee: 6 },
       humaita: { label: 'Humaitá', fee: 8 },
+      parque_sao_vicente: { label: 'Parque São Vicente', fee: 10 },
+      catiapoa: { label: 'Catiapoã', fee: 10 },
+      jockey: { label: 'Jockey', fee: 10 },
+      vila_margarida: { label: 'Vila Margarida', fee: 10 },
+      sambaiatuba: { label: 'Sambaiatuba', fee: 10 },
+      centro: { label: 'Centro', fee: 10 },
+      praia_grande: { label: 'Praia Grande(Especificar bairro no whats)', fee: 10 },
     };
     const neighborhoodInfo = neighborhoodMap[bairro] || { label: bairro, fee: 0 };
     const deliveryFee = neighborhoodInfo.fee;
@@ -205,7 +219,7 @@ function render(container) {
     }
 
     // Format order message
-    let message = `Pedido da Pizzaria:%0A`;
+    let message = `Pedido da Delícia de Sabor:%0A`;
     message += `Nome: ${nome}%0A`;
     message += `Endereço: ${rua}, Nº ${numero}, ${complemento}, Bairro: ${bairroLabel}%0A`;
     message += `Taxa de entrega: R$ ${deliveryFee.toFixed(2)}%0A`;
